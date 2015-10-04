@@ -5,7 +5,6 @@
 #define DHT11_PIN 5 //dht 5.pinde
 
 //File dosya;
-dht DHT;
 
 /*
 Röleler:
@@ -21,7 +20,7 @@ Servo myservo;  //servo kullanmak istersek
 byte mac[] = { 
   0x90, 0xA2, 0xDA, 0x0F, 0x4A, 0x57 }; //mac address
 byte ip[] = { 
-  10, 0, 4, 12 }; // seçilen ip
+  10, 0, 6, 250 }; // seçilen ip
 EthernetServer server(80);
 byte gateway[] = { 
   10, 0, 0, 253 }; 
@@ -42,8 +41,6 @@ void setup(){
 }
 
 void loop(){
-
-
 
   EthernetClient client = server.available();
   if (client) {
@@ -72,12 +69,18 @@ void loop(){
         {
           mode = 2;
           Serial.println("2 On");
+          digitalWrite(6, HIGH);   
+          digitalWrite(5, HIGH);   
+          delay(1000);
         }
         else{
           if(readString.indexOf("?light2off") >0)//checks for off
           {
             mode = 0;
             Serial.println("2 Off");
+            digitalWrite(6, LOW);   
+            digitalWrite(5, LOW);   
+            delay(1000);
           }
         }
 
@@ -105,15 +108,15 @@ void loop(){
 
           client.print("Light 1: ");
           if (digitalRead(6) == HIGH) {
-            client.print("is OFF");
+            client.print("is ON");
           }
           else {
-            client.print("is ON.");
+            client.print("is OFF.");
           }
 
           client.println("<br />");
           client.print("Light 2: ");
-          if (digitalRead(7) == HIGH) {
+          if (digitalRead(7) == LOW) {
             client.print("is OFF.");
           }
           else {
@@ -122,7 +125,7 @@ void loop(){
 
           client.println("<br />");
           client.print("Led's : ");
-          if (digitalRead(5) == HIGH) {
+          if (digitalRead(5) == LOW) {
             client.print("are OFF.");
           }
           else {
@@ -137,7 +140,7 @@ void loop(){
           client.println("<TITLE>Control Panel</TITLE>");
           client.println("</HEAD>");
           client.println("<BODY>");
-          client.println("<H1>Hisar CS Room Automation Control Panel</H1>");
+          client.println("<H1>Hisar CS Patates Control Panel</H1>");
           client.println("<br />");
           client.println("Software Version : v1.3beta2");
           client.println("<hr />");
@@ -157,28 +160,28 @@ void loop(){
 
           client.print("Light 1: ");
           if (mode == 1) {
-            client.print("is OFF");
+            client.print("is ON");
           }
           else {
-            client.print("is ON.");
+            client.print("is OFF.");
           }
 
           client.println("<br />");
           client.print("Light 2: ");
           if (mode == 2) {
-            client.print("is OFF.");
+            client.print("is ON.");
           }
           else {
-            client.print("is ON.");
+            client.print("is OFF.");
           }
 
           client.println("<br />");
           client.print("Led's : ");
           if (mode == 3) {
-            client.print("are OFF.");
+            client.print("are ON");
           }
           else {
-            client.print("are ON.");
+            client.print("are OFF.");
           }
 
           /*client.println("<br />");
@@ -203,28 +206,23 @@ void loop(){
     }
   }
   if (mode == 1) {
-    //steps 10'a kadar gidio, içine if'lerle yazıosun her adımı ki online check etmeye devam etsin...
-    if(steps == 1) {
-    
-    }
-    if(steps == 2) {
-    
-    } 
-    if(steps == 3) {
-    
-    } //gibi...
+    //stuff
   }  
   else if (mode == 2) {
-    //
+    //digitalWrite(6, HIGH);   
   }  
-  else if (mode == 3) {
+  else if (mode   == 3) {
     //
+  } 
+  else if (mode == 0) {
+    digitalWrite(6, LOW);   
   }
   steps++;
-  if (steps % 10 == 0) {
+  if (steps % 4 == 0) {
     steps = 0;
   }
 }
+
 
 
 
