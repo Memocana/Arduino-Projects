@@ -56,31 +56,30 @@ void loop(){
         if(readString.indexOf("?lighton") >0)//checks for on
         {
           mode = 1;
-          Serial.println("1 On");
+          Serial.println("1 LOW");
+          digitalWrite(7, LOW);
         }
-        else{
-          if(readString.indexOf("?lightoff") >0)//checks for off
-          {
-            mode = 0;
-            Serial.println("1 Off");
-          }
-        }
-        if(readString.indexOf("?light2on") >0)//checks for on
+        else if(readString.indexOf("?lightoff") >0)//checks for off
         {
-          mode = 2;
-          Serial.println("2 On");
-          digitalWrite(6, HIGH);   
-          digitalWrite(5, HIGH);   
-          delay(1000);
+          mode = 0;
+          digitalWrite(7, HIGH);
+          Serial.println("1 HIGH");
+
         }
-        else{
-          if(readString.indexOf("?light2off") >0)//checks for off
-          {
-            mode = 0;
-            Serial.println("2 Off");
-            digitalWrite(6, LOW);   
-            digitalWrite(5, LOW);   
-            delay(1000);
+        if(readString.indexOf("?seq1") >0)//checks for on
+        {
+          for (int i = 0; i < 11; i++) {
+            digitalWrite(7, !digitalRead(7));
+            delay(100);
+          }
+          
+          if (mode == 1) {
+            readString =" ?lighton ";
+            digitalWrite(7, LOW);
+            delay(100);
+          } else {
+            readString =" ?lightoff ";
+            digitalWrite(7, HIGH);
           }
         }
 
@@ -106,31 +105,15 @@ void loop(){
           client.println("Content-Type: text/html");
           client.println();
 
-          client.print("Light 1: ");
-          if (digitalRead(6) == HIGH) {
-            client.print("is ON");
-          }
-          else {
-            client.print("is OFF.");
-          }
-
-          client.println("<br />");
-          client.print("Light 2: ");
+          client.print("Lights: ");
           if (digitalRead(7) == LOW) {
-            client.print("is OFF.");
+            client.print("are ON");
           }
           else {
-            client.print("is ON.");
-          }
-
-          client.println("<br />");
-          client.print("Led's : ");
-          if (digitalRead(5) == LOW) {
             client.print("are OFF.");
           }
-          else {
-            client.print("are ON.");
-          }
+
+          client.println("<br />");
 
           client.println("<HTML>");
           client.println("<HEAD>");
@@ -148,48 +131,24 @@ void loop(){
           client.println(Ethernet.localIP());
           client.println("<br />");
           client.println("<br />");
-          client.println("<a href=\"/?lighton\"\">Turn On Sequence 1</a>");
-          client.println("<a href=\"/?lightoff\"\">Turn Off Sequence 1</a><br />");
+          client.println("<a href=\"/?lighton\"\">Turn On</a>");
+          client.println("<a href=\"/?lightoff\"\">Turn Off</a><br />");
           client.println("<br />");
-          client.println("<a href=\"/?light2on\"\">Turn On Sequence 2</a>");
-          client.println("<a href=\"/?light2off\"\">Turn Off Sequence 2</a><br />");
+          client.println("<a href=\"/?seq1\"\">Sequence 1</a>");
           client.println("<br />");
-          client.println("<a href=\"/?light3on\"\">Turn On Sequence 3</a>");
-          client.println("<a href=\"/?light3off\"\">Turn Off Sequence</a><br />");
+          client.println("<a href=\"/?seq2\"\">Sequence 2</a>");
           client.println("<br />");   
 
-          client.print("Light 1: ");
+          client.print("Lights: ");
           if (mode == 1) {
-            client.print("is ON");
-          }
-          else {
-            client.print("is OFF.");
-          }
-
-          client.println("<br />");
-          client.print("Light 2: ");
-          if (mode == 2) {
-            client.print("is ON.");
-          }
-          else {
-            client.print("is OFF.");
-          }
-
-          client.println("<br />");
-          client.print("Led's : ");
-          if (mode == 3) {
             client.print("are ON");
           }
           else {
             client.print("are OFF.");
           }
 
-          /*client.println("<br />");
-           client.print("Nem ");
-           client.println(DHT.humidity, 1);
-           client.print("Sicaklik ");
-           client.println(DHT.temperature, 1);
-           */
+          client.println("<br />");
+
           client.println("</BODY>");
           client.println("</HTML>");
 
@@ -205,23 +164,8 @@ void loop(){
       }
     }
   }
-  if (mode == 1) {
-    //stuff
-  }  
-  else if (mode == 2) {
-    //digitalWrite(6, HIGH);   
-  }  
-  else if (mode   == 3) {
-    //
-  } 
-  else if (mode == 0) {
-    digitalWrite(6, LOW);   
-  }
-  steps++;
-  if (steps % 4 == 0) {
-    steps = 0;
-  }
 }
+
 
 
 
