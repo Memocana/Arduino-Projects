@@ -131,14 +131,14 @@ void loop(){
           client.println(Ethernet.localIP());
           client.println("<br />");
           client.println("<p id='demo'></p><script>var now = Date();\n document.getElementById('demo').innerHTML = now;</script>");
-          client.println("<p><?php");
+          /*client.println("<p><?php");
           client.println("$minutes = date('i')");
           client.println("echo date('H:i:s')");
           client.println("if ($minutes == 0) {");
           client.println("$url = '10.0.6.250/?seq1;");
           client.println("header( 'Location: $url' );");//bu satıra dikkat!
           client.println("}");
-          client.println("</?></p>");
+          client.println("/?></p>");*/
           client.println("<br />");
           client.println("<a href=\"/?lighton\"\">Turn On</a>");
           client.println("<a href=\"/?lightoff\"\">Turn Off</a><br />");
